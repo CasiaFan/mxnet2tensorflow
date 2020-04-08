@@ -1,0 +1,6 @@
+tensorflow==1.15.0
+mxnet==1.5.0
+Pillow
+numpy
+fire
+mmdnn 
