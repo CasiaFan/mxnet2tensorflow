@@ -5,8 +5,8 @@ Convert mxnet model (Version 1.5) to tensorflow V1 model (Version 1.15) or tflit
 1. Install MMdnn
 `pip install mmdnn`
 
-2. MMdnn one-step conversion
-Use [insightface](https://github.com/deepinsight/insightface) mxnet r50 model as an example (download from [model zoo](https://github.com/deepinsight/insightface/wiki/Model-Zoo))
+2. MMdnn one-step conversion<br>
+Use [insightface](https://github.com/deepinsight/insightface) mxnet r50 model as an example (download from [model zoo](https://github.com/deepinsight/insightface/wiki/Model-Zoo))<br>
 The supported framework could be found here: https://github.com/microsoft/MMdnn#support-frameworks
 
 ```bash
@@ -14,7 +14,7 @@ mmconvert -sf mxnet -in model-symbol.json -iw model-0000.params -df tensorflow -
 ```
 Then the converted model is saved in this format for serving: **saved_model.pb** + **variables** 
 
-3. MMdnn step-by-step conversion
+3. MMdnn step-by-step conversion<br>
 **1)** convert model from MXnet to IR
 ```bash
 mmtoir -f mxnet -n model-symbol.json -w model-0000.params -d ir_model --inputShape 3,112,112
@@ -33,7 +33,7 @@ mmtomodel -f tensorflow -in ir_model.py -iw ir_model.npy -o ir_model --dump_tag 
 ```
 Tensorflow model is saved in ir_model directory with **saved_model.pb** and **variables**. Choose `dump_tag` as **SERVING** or **TRAINING**
 
-4. Convert tensorflow model to tflite for mobile deployment
+## Convert tensorflow model to tflite (tf2tflite)
 Run `pb2lite.py` to convert pb to lite
 ```bash
 python pb2lite_fire.py --model=ir_model    # pb saved_model path
@@ -47,7 +47,7 @@ python pb2lite_fire.py --model=ir_model    # pb saved_model path
                        --quant=False       # quantize weight or not  
 ```
 
-5. Check inference result
+## Check inference result
 Run `test_inference.py` to check model output so that their results should be consistent.
 ```bash
 python infer_fire.py --model ir_mdoel.tflite   # model path
@@ -57,11 +57,12 @@ python infer_fire.py --model ir_mdoel.tflite   # model path
                      --output_nodes=fc1/add_1  # output node name 
                      --test_image_path=face_tune_image/00c11cdc71eaafb14fef53f032bf3ae7.jpg # test image path
 ```
-6. Add custom layer
+## Add custom layer
 For example, if we want to add softmax layer after the last layer, we could modify the `ir_model.py` generated in MMdnn step-by-step conversion and re-freeze it. We add the following lines:
 
-a. Add `with tf.Session() as sess:` @Line 24 of `r50.py` to initialize the session
-b. Add the following lines @Line 261 of `r50.py` to save the extra node into graph
+**a).** Add `with tf.Session() as sess:` @Line 24 of `r50.py` to initialize the session<br>
+**b).** Add the following lines @Line 261 of `r50.py` to save the extra node into graph<br>
+
 ```python
 ...
 # add softmax
