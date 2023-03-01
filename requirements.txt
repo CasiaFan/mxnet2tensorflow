@@ -1,5 +1,5 @@
 tensorflow==1.15.4
-mxnet==1.5.0
+mxnet==1.9.1
 Pillow
 numpy
 fire
